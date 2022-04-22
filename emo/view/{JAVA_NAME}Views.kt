@@ -27,8 +27,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.hh.emo.base.usecase.EmoContentView
-import com.hh.emo.base.usecase.PageState
+import com.xiaojinzi.module.base.usecase.CommonContentView
 import com.hh.emo.base.view.compose.EmoAppbarNormal
 import com.xiaojinzi.support.ktx.nothing
 import com.xiaojinzi.support.ktx.toStringItemDTO
@@ -41,11 +40,7 @@ import com.xiaojinzi.support.ktx.toStringItemDTO
 @Composable
 private fun {JAVA_NAME}View() {
     val context = LocalContext.current
-    val vm: {JAVA_NAME}ViewModel = viewModel()
-    val pageState by vm.pageStateObservableDTO.collectAsState(initial = PageState.NORMAL)
-    EmoContentView(
-        pageState = pageState,
-    ) {
+    CommonContentView<{JAVA_NAME}ViewModel> { vm ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
