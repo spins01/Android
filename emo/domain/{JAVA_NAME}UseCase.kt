@@ -15,8 +15,9 @@ interface {JAVA_NAME}UseCase : CommonBaseUseCase {
 @ViewModelLayer
 class {JAVA_NAME}UseCaseImpl(
     private val commonUseCase: CommonUseCase = CommonUseCaseImpl(),
-) : CommonBaseUseCaseImpl(), {JAVA_NAME}UseCase,
-    CommonUseCase by commonUseCase {
+) : CommonBaseUseCaseImpl(),
+    CommonUseCase by commonUseCase,
+    {JAVA_NAME}UseCase {
     
     override fun destroy() {
         super.destroy()

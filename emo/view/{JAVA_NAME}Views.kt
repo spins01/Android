@@ -38,7 +38,7 @@ import com.xiaojinzi.support.ktx.toStringItemDTO
 @ExperimentalPagerApi
 @ExperimentalFoundationApi
 @Composable
-private fun {JAVA_NAME}View() {
+private fun {JAVA_NAME}View(paddingValues: PaddingValues = PaddingValues(all = 0.dp)) {
     val context = LocalContext.current
     CommonContentView<{JAVA_NAME}ViewModel> { vm ->
         Column(
@@ -66,8 +66,8 @@ fun {JAVA_NAME}ViewWrap() {
                 title = "hello".toStringItemDTO(),
             )
         }
-    ) {
-        {JAVA_NAME}View()
+    ) { paddingValues ->
+        {JAVA_NAME}View(paddingValues = paddingValues)
     }
 }
 

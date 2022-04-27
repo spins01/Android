@@ -9,7 +9,7 @@ import androidx.core.view.WindowCompat
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.hh.emo.base.EmoRouterConfig
 import com.hh.emo.base.theme.EmoTheme
-import com.hh.emo.base.view.BaseEmoActivity
+import com.hh.emo.base.view.EmoBaseActivity
 import com.xiaojinzi.component.anno.RouterAnno
 import com.xiaojinzi.module.base.support.translateStatusBar
 import com.xiaojinzi.module.base.view.compose.StateBar
@@ -19,7 +19,7 @@ import kotlinx.coroutines.InternalCoroutinesApi
 
 @RouterAnno(hostAndPath = EmoRouterConfig.xxx)
 @ViewLayer
-class {JAVA_NAME}Act : BaseEmoActivity<{JAVA_NAME}ViewModel>() {
+class {JAVA_NAME}Act : EmoBaseActivity<{JAVA_NAME}ViewModel>() {
 
     override fun getViewModelClass(): Class<{JAVA_NAME}ViewModel> {
         return {JAVA_NAME}ViewModel::class.java
