@@ -1,9 +1,9 @@
 package {ROOT_PACKAGE_NAME}.{NAME}.domain
 
+import com.xiaojinzi.module.common.base.usecase.CommonBaseUseCase
+import com.xiaojinzi.module.common.base.usecase.CommonBaseUseCaseImpl
 import com.xiaojinzi.support.annotation.HotObservable
 import com.xiaojinzi.support.annotation.ViewModelLayer
-import com.xiaojinzi.module.base.usecase.CommonBaseUseCase
-import com.xiaojinzi.module.base.usecase.CommonBaseUseCaseImpl
 import com.xiaojinzi.support.architecture.mvvm1.CommonUseCase
 import com.xiaojinzi.support.architecture.mvvm1.CommonUseCaseImpl
 

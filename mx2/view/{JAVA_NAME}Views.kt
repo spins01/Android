@@ -1,5 +1,6 @@
 package {ROOT_PACKAGE_NAME}.{NAME}.view
 
+import android.annotation.SuppressLint
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import com.google.accompanist.pager.ExperimentalPagerApi
@@ -27,10 +28,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.xiaojinzi.module.base.usecase.CommonContentView
-import com.hh.emo.base.view.compose.EmoAppbarNormal
+import com.app.module.base.usecase.CommonContentView
+import com.app.module.base.view.compose.AppbarNormalM2
 import com.xiaojinzi.support.ktx.nothing
-import com.xiaojinzi.support.ktx.toStringItemDTO
+import com.xiaojinzi.support.ktx.toStringItemDto
 
 @InternalCoroutinesApi
 @ExperimentalMaterialApi
@@ -38,7 +39,7 @@ import com.xiaojinzi.support.ktx.toStringItemDTO
 @ExperimentalPagerApi
 @ExperimentalFoundationApi
 @Composable
-private fun {JAVA_NAME}View(paddingValues: PaddingValues = PaddingValues(all = 0.dp)) {
+private fun {JAVA_NAME}View() {
     val context = LocalContext.current
     CommonContentView<{JAVA_NAME}ViewModel> { vm ->
         Column(
@@ -59,15 +60,16 @@ private fun {JAVA_NAME}View(paddingValues: PaddingValues = PaddingValues(all = 0
 @ExperimentalPagerApi
 @ExperimentalFoundationApi
 @Composable
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 fun {JAVA_NAME}ViewWrap() {
     Scaffold(
         topBar = {
-            EmoAppbarNormal(
-                title = "hello".toStringItemDTO(),
+            AppbarNormalM2(
+                title = "hello".toStringItemDto(),
             )
         }
-    ) { paddingValues ->
-        {JAVA_NAME}View(paddingValues = paddingValues)
+    ) {
+        {JAVA_NAME}View()
     }
 }
 
