@@ -34,10 +34,11 @@ import kotlinx.coroutines.InternalCoroutinesApi
 @InternalCoroutinesApi
 @ExperimentalMaterial3Api
 @ExperimentalAnimationApi
-@ExperimentalPagerApi
 @ExperimentalFoundationApi
 @Composable
-private fun {JAVA_NAME}View() {
+private fun {JAVA_NAME}View(
+    previewDefault: {JAVA_NAME}PreviewDefault? = null,
+) {
     val context = LocalContext.current
     CommonContentView<{JAVA_NAME}ViewModel> { vm ->
         Column(
@@ -54,7 +55,6 @@ private fun {JAVA_NAME}View() {
 @InternalCoroutinesApi
 @ExperimentalMaterial3Api
 @ExperimentalAnimationApi
-@ExperimentalPagerApi
 @ExperimentalFoundationApi
 @Composable
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -76,13 +76,20 @@ fun {JAVA_NAME}ViewWrap() {
     }
 }
 
+private data class {JAVA_NAME}PreviewDefault(
+    val str: String,
+)
+
 @InternalCoroutinesApi
 @ExperimentalMaterial3Api
 @ExperimentalAnimationApi
-@ExperimentalPagerApi
 @ExperimentalFoundationApi
 @Preview
 @Composable
 private fun {JAVA_NAME}ViewPreview() {
-    {JAVA_NAME}View()
+    {JAVA_NAME}View(
+        previewDefault = {JAVA_NAME}PreviewDefault(
+            str = "测试数据",
+        )
+    )
 }

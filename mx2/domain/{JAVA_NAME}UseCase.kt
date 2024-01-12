@@ -1,7 +1,7 @@
 package {ROOT_PACKAGE_NAME}.{NAME}.domain
 
-import com.hh.emo.base.usecase.CommonBaseUseCase
-import com.hh.emo.base.usecase.CommonBaseUseCaseImpl
+import com.app.module.base.usecase.CommonBaseUseCase
+import com.app.module.base.usecase.CommonBaseUseCaseImpl
 import com.xiaojinzi.support.annotation.HotObservable
 import com.xiaojinzi.support.annotation.ViewModelLayer
 
@@ -9,7 +9,7 @@ import com.xiaojinzi.support.architecture.mvvm1.CommonUseCase
 import com.xiaojinzi.support.architecture.mvvm1.CommonUseCaseImpl
 
 @ViewModelLayer
-interface {JAVA_NAME}UseCase : CommonBaseUseCase {
+interface {JAVA_NAME}UseCase : CommonBaseUseCase, CommonUseCase {
     // TODO
 }
 

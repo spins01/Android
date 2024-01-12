@@ -10,7 +10,7 @@ import com.app.module.base.AppRouterConfig
 import com.app.module.base.support.translateStatusBar
 import com.app.module.base.theme.AppTheme3
 import com.app.module.base.view.AppBaseActivity
-import com.app.module.base.view.compose.StateBar
+import com.app.module.base.view.compose.AppStateBar
 import com.google.accompanist.pager.ExperimentalPagerApi
 
 import com.xiaojinzi.component.anno.RouterAnno
@@ -32,7 +32,6 @@ class {JAVA_NAME}Act : AppBaseActivity<{JAVA_NAME}ViewModel>() {
         InternalCoroutinesApi::class,
         ExperimentalMaterial3Api::class,
         ExperimentalAnimationApi::class,
-        ExperimentalPagerApi::class,
         ExperimentalFoundationApi::class,
     )
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,7 +45,7 @@ class {JAVA_NAME}Act : AppBaseActivity<{JAVA_NAME}ViewModel>() {
 
         setContent {
             AppTheme3 {
-                StateBar {
+                AppStateBar {
                     {JAVA_NAME}ViewWrap() 
                 }
             }
