@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="res_apk_name">Spins</string>
+    <string name="res_mobile">Mobile</string>
+    <string name="res_sign_in">Sign in</string>
+    <string name="res_email">E-mail</string>
+    <string name="res_sign_up">Sign up</string>
+</resources>
