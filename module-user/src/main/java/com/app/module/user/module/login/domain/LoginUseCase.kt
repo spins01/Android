@@ -42,7 +42,7 @@ sealed class LoginIntent {
     data class LoginByWx(
         @UiContext val context: Context
     ) : LoginIntent()
-
+    //数据就是事件
     data class SendCheckCode(
         val usage: Usage,
     ) : LoginIntent() {
@@ -174,7 +174,7 @@ class LoginUseCaseImpl(
             value = Unit,
         )
     }
-
+ //intent: LoginIntent.SendCheckCode,匹配参数，一一对应。addIntent后调用这里。
     @IntentProcess
     @BusinessUseCase.AutoLoading
     private suspend fun sendCheckCode(
@@ -191,7 +191,7 @@ class LoginUseCaseImpl(
             )
             return
         }
-        // 模拟登录
+        // 模拟登录，耗时任务
         delay(1000)
         sendCheckCodeAvailableTimeStateOb.emit(
             value = System.currentTimeMillis() + 1000 * 60,

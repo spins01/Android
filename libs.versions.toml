@@ -22,8 +22,12 @@ retrofit = "2.9.0"
 room = "2.6.1"
 glance = "1.0.0"
 uiUtil = "1.3.0"
+coil-version= "2.6.0"
+
 
 [libraries]
+coil_kotlin = {module ="io.coil-kt:coil",version.ref = "coil-version"}
+coil_compose = {module ="io.coil-kt:coil-compose",version.ref = "coil-version"}
 kotlin_parcelize_runtime = { group = "org.jetbrains.kotlin", name = "kotlin-parcelize-runtime", version.ref = "kotlin" }
 androidx_annotation = { group = "androidx.annotation", name = "annotation", version = "1.7.1" }
 androidx_core = { group = "androidx.core", name = "core-ktx", version = "1.12.0" }
@@ -81,3 +85,10 @@ material = { group = "com.google.android.material", name = "material", version.r
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 android-application = { id = "com.android.application", version.ref = "agp" }
 android-library = { id = "com.android.library", version.ref = "agp" }
+
+
+[bundles]
+baseLibrary = [
+    "coil_kotlin",
+    "coil_compose"
+]

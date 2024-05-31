@@ -31,6 +31,9 @@ Activity要增肌@BootView注解
 7，module-base中添加依赖，如果只有自己的模块用到了，那就只在自己的模块中添加
 8，网络请求不要在View上写，在usecase中写，usecase中的initData(),可以在这个方法里初始化数据
 9， .nothing(),没啥用，以他结尾，方便修改。
+10，vm.addIntent()，在View层提交事件后，在LoginUseCaseImpl中处理。通过密封类的参数予以匹配。
+    内部的原理是，addIntent提交到一个Channel里(就是生产者和消费者模式，这个Channel是一个无限大的容器)。Channel会通过反射找到LoginUseCaseImpl中的方法
+11,PublishHotObservable这个注解表示SharedFlow。StateHotObservable这个注解表示StateFlow
 
 
 

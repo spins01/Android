@@ -3,29 +3,42 @@ package com.app.module.base.common
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Tab
 import androidx.compose.material.TabRow
 import androidx.compose.material.TabRowDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.FocusState
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
+import com.app.module.base.bean.RegisterLoginInputStatus
 import com.xiaojinzi.support.ktx.nothing
 
 
@@ -78,16 +91,12 @@ fun RegisterLoginText(textShow: String) {
  * 注册登录界面的Tab
  */
 @Composable
-fun TabBar(selectedIndex:Int,onTabSelected: (Int) -> Unit) {
+fun TabBar(tabs: List<String>, selectedIndex: Int, onTabSelected: (Int) -> Unit) {
 
-    //声明不可变的集合
-    val tabs = listOf(
-        LocalContext.current.getString(com.res.R.string.res_mobile),
-        LocalContext.current.getString(com.res.R.string.res_email)
-    )
+
     TabRow(
         selectedTabIndex = selectedIndex,
-        indicator = {_-> TabRowDefaults.Indicator(color = Color.Transparent)},
+        indicator = { _ -> TabRowDefaults.Indicator(color = Color.Transparent) },
         backgroundColor = Color.White,
         modifier = Modifier
             .size(width = 311.dp, height = 43.dp)
@@ -101,15 +110,21 @@ fun TabBar(selectedIndex:Int,onTabSelected: (Int) -> Unit) {
                 selected = selectedIndex == index,
                 onClick = {},
                 modifier = Modifier.padding(2.dp),
-                content = {TabBarView(selectedIndex == index,content,onTabSelected,index)}
+                content = { TabBarView(selectedIndex == index, content, onTabSelected, index) }
 
             )
         }
     }
 
 }
+
 @Composable
-private fun TabBarView(isSelected: Boolean, content: String,onTabSelected: (Int) -> Unit,index:Int) {
+private fun TabBarView(
+    isSelected: Boolean,
+    content: String,
+    onTabSelected: (Int) -> Unit,
+    index: Int
+) {
     val mModifier: Modifier = if (isSelected) {
         Modifier
             .size(width = 153.5.dp, height = 39.dp)
@@ -141,5 +156,104 @@ private fun TabBarView(isSelected: Boolean, content: String,onTabSelected: (Int)
     Box(modifier = mModifier, contentAlignment = Alignment.Center) {
         Text(text = content, style = TextStyle(color = mTextColor, fontSize = 15.sp))
     }
+}
 
+/**
+ * 电话号码注册
+ */
+@Composable
+fun MobileRegisterLogin(
+    focusRequesterForPhoneNumber: FocusRequester,
+    phoneNumberState: RegisterLoginInputStatus,
+    countryAreaCodeList: List<String>,
+    phoneNumberOb: TextFieldValue,
+    onMobileFocusChanged: (FocusState) -> Unit,
+    onMobileChange: (TextFieldValue) -> Unit
+) {
+    Row(
+        modifier = Modifier.registerLoginItemModifier(phoneNumberState),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Spacer(modifier = Modifier.width(10.dp))
+        AsyncImage(
+            model = com.res.R.drawable.phone,
+            contentDescription = null,
+            modifier = Modifier.size(width = 15.dp, height = 20.dp)
+        )
+        Spacer(modifier = Modifier.width(10.dp))
+        Text(
+            text = countryAreaCodeList[0],
+            fontSize = 14.sp,
+            color = colorResource(id = com.res.R.color.res_color_090E15)
+        )
+        Spacer(modifier = Modifier.width(10.dp))
+        TextField(
+            value = phoneNumberOb,
+            onValueChange = onMobileChange,
+            modifier = Modifier
+                .weight(1f)
+                .focusRequester(focusRequesterForPhoneNumber)
+                .onFocusChanged { focusState ->
+                    onMobileFocusChanged(focusState)
+                },
+            singleLine = true,
+            keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
+            isError = when (phoneNumberState) {
+                RegisterLoginInputStatus.ERROR -> true
+                else -> false
+            },
+            colors = TextFieldDefaults.colors(
+                focusedContainerColor = Color.Transparent,
+                unfocusedContainerColor = Color.Transparent,
+                disabledContainerColor = Color.Transparent,
+                errorContainerColor = Color.Transparent,
+            )
+        )
+    }
+}
+
+/**
+ * 发送手机验证码
+ */
+@Composable
+fun SendVerifyCode(
+    sendVerifyCodeState: RegisterLoginInputStatus,
+    sendCode: TextFieldValue,
+    onMobileFocusChanged: (FocusState) -> kotlin.Unit,
+    onMobileChange: (TextFieldValue) -> Unit
+) {
+    Row(
+        modifier = Modifier.registerLoginItemModifier(sendVerifyCodeState),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Spacer(modifier = Modifier.width(10.dp))
+        AsyncImage(
+            model = com.res.R.drawable.verify,
+            contentDescription = null,
+            modifier = Modifier.size(width = 15.dp, height = 20.dp)
+        )
+        Spacer(modifier = Modifier.width(10.dp))
+        TextField(
+            value = sendCode,
+            onValueChange = onMobileChange,
+            modifier = Modifier
+                .weight(1f)
+                .onFocusChanged { focusState ->
+                    onMobileFocusChanged(focusState)
+                },
+            singleLine = true,
+            keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
+            isError = when (sendVerifyCodeState) {
+                RegisterLoginInputStatus.ERROR -> true
+                else -> false
+            },
+            colors = TextFieldDefaults.colors(
+                focusedContainerColor = Color.Transparent,
+                unfocusedContainerColor = Color.Transparent,
+                disabledContainerColor = Color.Transparent,
+                errorContainerColor = Color.Transparent,
+            )
+        )
+        Te
+    }
 }

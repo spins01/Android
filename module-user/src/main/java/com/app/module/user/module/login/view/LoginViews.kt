@@ -294,6 +294,7 @@ private fun LoginView(
                             .clickableNoRipple {
                                 if (phoneNumber.text.isNotEmpty()) {
                                     if (sendCheckCodeCountDown == null) {
+                                        //View层提交事件
                                         vm.addIntent(
                                             intent = LoginIntent.SendCheckCode(
                                                 usage = LoginIntent.SendCheckCode.Usage.LOGIN

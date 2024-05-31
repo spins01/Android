@@ -30,4 +30,12 @@ dependencies {
     api(libs.glance.appwidget)
     api(libs.glance.material3)
 
+    api(libs.bundles.baseLibrary)
+
+//    api(libs.coil_compose)
+//    api(libs.coil_kotlin)
+
+//    api("io.coil-kt:coil:2.6.0")
+//    api("io.coil-kt:coil-compose:2.6.0")
+
 }
