@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.annotation.UiContext
 import androidx.compose.ui.text.input.TextFieldValue
 import com.app.module.base.bean.RegisterLoginInputStatus
+import com.app.module.base.bean.SendCodeButtonStatus
 import com.xiaojinzi.reactive.anno.IntentProcess
 import com.xiaojinzi.reactive.template.domain.BusinessUseCase
 import com.xiaojinzi.reactive.template.domain.BusinessUseCaseImpl
@@ -38,9 +39,18 @@ interface RegisterUseCase : BusinessUseCase {
     //验证码输入的状态
     val sendVerifyCodeStatusOB:MutableStateFlow<RegisterLoginInputStatus>
     //验证码
-    val mobileNumberSendCode: MutableStateFlow<TextFieldValue>
+    val mobileNumberSendCodeOB: MutableStateFlow<TextFieldValue>
     //验证码的改变
-    val mobileNumberSendCodeChange:MutableStateFlow<TextFieldValue>
+    val mobileNumberSendCodeChangeOB:MutableStateFlow<TextFieldValue>
+    //验证码按钮是否可以点击
+    val sendCodeButtonIsEnabledOB:MutableStateFlow<Boolean>
+    //验证码的状态(send resend resend(xxs))
+    val sendCodeButtonStatusOB : MutableStateFlow<SendCodeButtonStatus>
+    //验证码输入框内容
+    val sendCodeInputOb : MutableStateFlow<TextFieldValue>
+    //验证码输入框文字变化
+    val sendCodeInputChangeOb : MutableStateFlow<TextFieldValue>
+
 }
 
 @ViewModelLayer
@@ -56,8 +66,13 @@ class RegisterUseCaseImpl(
     override val mobileNumberStatusOB: MutableStateFlow<RegisterLoginInputStatus> = MutableStateFlow(value = RegisterLoginInputStatus.NORMAL)
     //手机号验证码
     override val sendVerifyCodeStatusOB: MutableStateFlow<RegisterLoginInputStatus> = MutableStateFlow(value = RegisterLoginInputStatus.NORMAL)
-    override val mobileNumberSendCode: MutableStateFlow<TextFieldValue> = MutableStateFlow(value = TextFieldValue())
-    override val mobileNumberSendCodeChange: MutableStateFlow<TextFieldValue> = MutableStateFlow(value = TextFieldValue())
+    override val mobileNumberSendCodeOB: MutableStateFlow<TextFieldValue> = MutableStateFlow(value = TextFieldValue())
+    override val mobileNumberSendCodeChangeOB: MutableStateFlow<TextFieldValue> = MutableStateFlow(value = TextFieldValue())
+    override val sendCodeButtonIsEnabledOB: MutableStateFlow<Boolean> = MutableStateFlow(value = false)
+    override val sendCodeButtonStatusOB: MutableStateFlow<SendCodeButtonStatus> = MutableStateFlow(value = SendCodeButtonStatus.SEND)
+    override val sendCodeInputOb: MutableStateFlow<TextFieldValue> = MutableStateFlow(value = TextFieldValue())
+    override val sendCodeInputChangeOb: MutableStateFlow<TextFieldValue> = MutableStateFlow(value = TextFieldValue())
+
 
     @IntentProcess
     @BusinessUseCase.AutoLoading

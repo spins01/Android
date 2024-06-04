@@ -16,6 +16,7 @@ import androidx.compose.material.Tab
 import androidx.compose.material.TabRow
 import androidx.compose.material.TabRowDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
@@ -29,6 +30,7 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
@@ -39,6 +41,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.app.module.base.bean.RegisterLoginInputStatus
+import com.app.module.base.bean.SendCodeButtonStatus
 import com.xiaojinzi.support.ktx.nothing
 
 
@@ -219,8 +222,13 @@ fun MobileRegisterLogin(
 fun SendVerifyCode(
     sendVerifyCodeState: RegisterLoginInputStatus,
     sendCode: TextFieldValue,
-    onMobileFocusChanged: (FocusState) -> kotlin.Unit,
-    onMobileChange: (TextFieldValue) -> Unit
+    onFocusChanged: (FocusState) -> Unit,
+    onInputContentChange: (TextFieldValue) -> Unit,
+
+    onSendCodeClick: () -> Unit,
+    isSendButtonEnable: Boolean,
+    sendCodeButtonStatus: SendCodeButtonStatus,
+    second:Int
 ) {
     Row(
         modifier = Modifier.registerLoginItemModifier(sendVerifyCodeState),
@@ -235,11 +243,11 @@ fun SendVerifyCode(
         Spacer(modifier = Modifier.width(10.dp))
         TextField(
             value = sendCode,
-            onValueChange = onMobileChange,
+            onValueChange = onInputContentChange,
             modifier = Modifier
                 .weight(1f)
                 .onFocusChanged { focusState ->
-                    onMobileFocusChanged(focusState)
+                    onFocusChanged(focusState)
                 },
             singleLine = true,
             keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
@@ -254,6 +262,48 @@ fun SendVerifyCode(
                 errorContainerColor = Color.Transparent,
             )
         )
-        Te
+        val brushEnabled = Brush.linearGradient(
+            colors = listOf(
+                colorResource(id = com.res.R.color.res_color_2EAFFF),
+                colorResource(id = com.res.R.color.res_color_167AFF)
+            )
+        )
+        val brushDisable = Brush.linearGradient(
+            colors = listOf(
+                colorResource(id = com.res.R.color.res_color_2EAFFF).copy(alpha = 0.3f),
+                colorResource(id = com.res.R.color.res_color_167AFF).copy(alpha = 0.3f)
+            )
+        )
+        val sendCodeButtonBrush = if (isSendButtonEnable) {
+            brushEnabled
+        } else {
+            brushDisable
+        }
+        val sendCodeButtonWidth = when (sendCodeButtonStatus) {
+            SendCodeButtonStatus.SEND -> 55.dp
+            SendCodeButtonStatus.RESEND -> 82.dp
+            SendCodeButtonStatus.RESEND_WITH_SECONDS -> 118.dp
+        }
+
+        val sendCodeButtonText = when(sendCodeButtonStatus){
+            SendCodeButtonStatus.SEND -> LocalContext.current.getText(com.res.R.string.res_send)
+            SendCodeButtonStatus.RESEND -> LocalContext.current.getText(com.res.R.string.res_resend)
+            SendCodeButtonStatus.RESEND_WITH_SECONDS -> "${LocalContext.current.getText(com.res.R.string.res_resend)}(${second}s)"
+        }
+
+
+        TextButton(
+            onClick = onSendCodeClick,
+            Modifier
+                .size(width = sendCodeButtonWidth, height = 36.dp)
+                .clip(
+                    RoundedCornerShape(6.dp)
+                )
+                .background(
+                    brush = sendCodeButtonBrush
+                )
+        ) {
+            Text(text = sendCodeButtonText.toString(), style = TextStyle(color = Color.White))
+        }
     }
 }

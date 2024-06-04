@@ -73,6 +73,11 @@ private fun RegisterView(
         val phoneNumberState by vm.mobileNumberStatusOB.collectAsState(initial = RegisterLoginInputStatus.NORMAL)
 //        val phoneNumberChangeOb by vm.phoneNumberChangeOb.collectAsState(initial = TextFieldValue())
         val focusRequesterForPhoneNumber = remember { FocusRequester() }
+
+
+        val sendVerifyCodeStatus by vm.sendVerifyCodeStatusOB.collectAsState(initial = RegisterLoginInputStatus.NORMAL)
+        val sendCodeButtonIsEnable by vm.sendCodeButtonIsEnabledOB.collectAsState(initial = false)
+        val sendCodeInput by vm.sendCodeInputOb.collectAsState(initial = TextFieldValue())
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -168,6 +173,7 @@ private fun MobileRegister(
             onMobileChange
         )
         Spacer(modifier = Modifier.height(15.dp))
+//        SendVerifyCode(sendVerifyCodeStatus，)
     }
 }
 
