@@ -21,6 +21,7 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -39,6 +40,15 @@ import com.app.module.base.common.RegisterLoginBoxWithBg
 import com.app.module.base.common.RegisterLoginIcon
 import com.app.module.base.common.RegisterLoginText
 import com.app.module.base.common.TabBar
+import com.app.module.base.common.localCountryAreaCodeList
+import com.app.module.base.common.localFocusRequesterForPhoneNumber
+import com.app.module.base.common.localOnMobileChange
+import com.app.module.base.common.localOnMobileFocusChanged
+import com.app.module.base.common.localPhoneNumber
+import com.app.module.base.common.localPhoneNumberState
+import com.app.module.base.common.localSendCodeButtonIsEnable
+import com.app.module.base.common.localSendCodeInput
+import com.app.module.base.common.localSendVerifyCodeStatus
 import com.module.register.domain.RegisterIntent
 import com.xiaojinzi.reactive.template.view.BusinessContentView
 import com.xiaojinzi.support.ktx.nothing
@@ -69,7 +79,7 @@ private fun RegisterView(
         val pageState = rememberPagerState {
             tabs.size
         }
-        val phoneNumberStateOb by vm.registerPhoneNumber.collectAsState(initial = TextFieldValue())
+//        val phoneNumberStateOb by vm.registerPhoneNumber.collectAsState(initial = TextFieldValue())
         val phoneNumberState by vm.mobileNumberStatusOB.collectAsState(initial = RegisterLoginInputStatus.NORMAL)
 //        val phoneNumberChangeOb by vm.phoneNumberChangeOb.collectAsState(initial = TextFieldValue())
         val focusRequesterForPhoneNumber = remember { FocusRequester() }
@@ -78,69 +88,81 @@ private fun RegisterView(
         val sendVerifyCodeStatus by vm.sendVerifyCodeStatusOB.collectAsState(initial = RegisterLoginInputStatus.NORMAL)
         val sendCodeButtonIsEnable by vm.sendCodeButtonIsEnabledOB.collectAsState(initial = false)
         val sendCodeInput by vm.sendCodeInputOb.collectAsState(initial = TextFieldValue())
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .systemBarsPadding()
-                .background(
-                    color = Color.White.copy(alpha = 0f)
+
+
+        val onMobileFocusChanged :(FocusState) -> Unit = {focusState ->
+            vm.addIntent(
+                intent = RegisterIntent.MobileNumberIsFocus(
+                    context,
+                    focusState.isFocused
                 )
-                .nothing(),
-            horizontalAlignment = Alignment.CenterHorizontally,
+            )
+        }
+
+        val onMobileChange : (TextFieldValue) ->Unit = { textFieldValue ->
+            Log.e("赵云","${textFieldValue.text}                             ")
+            //绝大部分事件都可以走Intent,但是文字输入除外 因为文字输入如果走 intent 的话
+            //intent 的响应速度跟不上输入的速度
+            //会出现你连续输入3个字符 最终显示2个的问题，其他都是走 intent
+            //就文字变更这种是特别的
+
+//          vm.addIntent(RegisterIntent.ChangeMobileNumber(context,textFieldValue))
+            vm.registerPhoneNumber.value =
+                textFieldValue.copy(text = textFieldValue.text.trim())
+        }
+        CompositionLocalProvider(
+            localPhoneNumber provides vm.registerPhoneNumber.collectAsState(initial = TextFieldValue()),
+            localPhoneNumberState provides phoneNumberState,
+            localFocusRequesterForPhoneNumber provides focusRequesterForPhoneNumber,
+            localSendVerifyCodeStatus provides sendVerifyCodeStatus,
+            localSendCodeButtonIsEnable provides sendCodeButtonIsEnable,
+            localSendCodeInput provides sendCodeInput,
+            localOnMobileFocusChanged provides onMobileFocusChanged,
+            localOnMobileChange provides onMobileChange,
+            localCountryAreaCodeList provides countryAreaCodeList,
+            localFocusRequesterForPhoneNumber provides focusRequesterForPhoneNumber
         ) {
-            Spacer(modifier = Modifier.height(23.dp))
-            RegisterLoginIcon()
-            Spacer(modifier = Modifier.height(13.dp))
-            RegisterLoginText(context.getString(com.res.R.string.res_sign_up))
-            Spacer(modifier = Modifier.height(26.dp))
-            TabBar(tabs, selectedIndex) {
-                vm.addIntent(
-                    intent = RegisterIntent.SwitchTab(
-                        context,
-                        selectedIndex = it
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .systemBarsPadding()
+                    .background(
+                        color = Color.White.copy(alpha = 0f)
                     )
-                )
-            }
-            Spacer(modifier = Modifier.height(20.dp))
-            HorizontalPager(
-                modifier = Modifier.wrapContentSize(),
-                state = pageState,
-                pageSpacing = 0.dp,
-                userScrollEnabled = false,
-                reverseLayout = false,
-                contentPadding = PaddingValues(0.dp),
-                beyondBoundsPageCount = 0,
-                pageSize = PageSize.Fill,
-            ) { page ->
-                when (page) {
-                    0 -> {
-                        MobileRegister(focusRequesterForPhoneNumber,
-                            phoneNumberState,
-                            countryAreaCodeList,
-                            phoneNumberStateOb,
-                            { focusState ->
-                                vm.addIntent(
-                                    intent = RegisterIntent.MobileNumberIsFocus(
-                                        context,
-                                        focusState.isFocused
-                                    )
-                                )
-                            }
-                        ) { textFieldValue ->
-                            Log.e("赵云", "${textFieldValue}")
-                            //绝大部分事件都可以走Intent,但是文字输入除外 因为文字输入如果走 intent 的话
-                            //intent 的响应速度跟不上输入的速度
-                            //会出现你连续输入3个字符 最终显示2个的问题，其他都是走 intent
-                            //就文字变更这种是特别的
-//                            vm.addIntent(RegisterIntent.ChangeMobileNumber(context,textFieldValue))
-                            vm.phoneNumberChangeOb.value =
-                                textFieldValue.copy(text = textFieldValue.text.trim())
-
+                    .nothing(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                Spacer(modifier = Modifier.height(23.dp))
+                RegisterLoginIcon()
+                Spacer(modifier = Modifier.height(13.dp))
+                RegisterLoginText(context.getString(com.res.R.string.res_sign_up))
+                Spacer(modifier = Modifier.height(26.dp))
+                TabBar(tabs, selectedIndex) {
+                    vm.addIntent(
+                        intent = RegisterIntent.SwitchTab(
+                            context,
+                            selectedIndex = it
+                        )
+                    )
+                }
+                Spacer(modifier = Modifier.height(20.dp))
+                HorizontalPager(
+                    modifier = Modifier.wrapContentSize(),
+                    state = pageState,
+                    pageSpacing = 0.dp,
+                    userScrollEnabled = false,
+                    reverseLayout = false,
+                    contentPadding = PaddingValues(0.dp),
+                    beyondBoundsPageCount = 0,
+                    pageSize = PageSize.Fill,
+                ) { page ->
+                    when (page) {
+                        0 -> {
+                            MobileRegister()
                         }
-                    }
-
-                    1 -> {
-                        EmailRegister()
+                        1 -> {
+                            EmailRegister()
+                        }
                     }
                 }
             }
@@ -148,15 +170,9 @@ private fun RegisterView(
     }
 }
 
+
 @Composable
-private fun MobileRegister(
-    focusRequesterForPhoneNumber: FocusRequester,
-    phoneNumberState: RegisterLoginInputStatus,
-    countryAreaCodeList: List<String>,
-    phoneNumberStateOb: TextFieldValue,
-    onMobileFocusChanged: (FocusState) -> Unit,
-    onMobileChange: (TextFieldValue) -> Unit
-) {
+private fun MobileRegister() {
     Column(
         modifier = Modifier
             .wrapContentHeight()
@@ -165,12 +181,6 @@ private fun MobileRegister(
     ) {
         Spacer(modifier = Modifier.height(20.dp))
         MobileRegisterLogin(
-            focusRequesterForPhoneNumber,
-            phoneNumberState,
-            countryAreaCodeList,
-            phoneNumberStateOb,
-            onMobileFocusChanged,
-            onMobileChange
         )
         Spacer(modifier = Modifier.height(15.dp))
 //        SendVerifyCode(sendVerifyCodeStatus，)
@@ -218,3 +228,4 @@ private fun RegisterViewPreview() {
         needInit = false,
     )
 }
+

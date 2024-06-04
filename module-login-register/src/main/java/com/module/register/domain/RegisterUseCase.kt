@@ -33,7 +33,7 @@ interface RegisterUseCase : BusinessUseCase {
     //选择的tab
     val selectedIndex:MutableStateFlow<Int>
     //输入的手机号变更(这里不走Intent)
-    val phoneNumberChangeOb:MutableStateFlow<TextFieldValue>
+//    val phoneNumberChangeOb:MutableStateFlow<TextFieldValue>
     //手机号输入框的状态
     val mobileNumberStatusOB:MutableStateFlow<RegisterLoginInputStatus>
     //验证码输入的状态
@@ -62,7 +62,7 @@ class RegisterUseCaseImpl(
     //手机号
     override val registerPhoneNumber: MutableStateFlow<TextFieldValue> = MutableStateFlow(value = TextFieldValue(text = ""))
     override val selectedIndex: MutableStateFlow<Int> = MutableStateFlow(value = 0)
-    override val phoneNumberChangeOb: MutableStateFlow<TextFieldValue> = MutableStateFlow(value = TextFieldValue())
+//    override val phoneNumberChangeOb: MutableStateFlow<TextFieldValue> = MutableStateFlow(value = TextFieldValue())
     override val mobileNumberStatusOB: MutableStateFlow<RegisterLoginInputStatus> = MutableStateFlow(value = RegisterLoginInputStatus.NORMAL)
     //手机号验证码
     override val sendVerifyCodeStatusOB: MutableStateFlow<RegisterLoginInputStatus> = MutableStateFlow(value = RegisterLoginInputStatus.NORMAL)

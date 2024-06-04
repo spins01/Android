@@ -5,12 +5,14 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Tab
 import androidx.compose.material.TabRow
@@ -23,9 +25,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.FocusState
-import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -85,7 +85,8 @@ fun RegisterLoginText(textShow: String) {
             .nothing(),
         style = TextStyle(
             fontSize = 20.sp,
-            fontWeight = FontWeight.Bold
+            fontWeight = FontWeight.Bold,
+            color = colorResource(id = com.res.R.color.res_color_0D2478)
         )
     )
 }
@@ -166,15 +167,11 @@ private fun TabBarView(
  */
 @Composable
 fun MobileRegisterLogin(
-    focusRequesterForPhoneNumber: FocusRequester,
-    phoneNumberState: RegisterLoginInputStatus,
-    countryAreaCodeList: List<String>,
-    phoneNumberOb: TextFieldValue,
-    onMobileFocusChanged: (FocusState) -> Unit,
-    onMobileChange: (TextFieldValue) -> Unit
 ) {
+    val onFocusChanged = localOnMobileFocusChanged.current
+    val onValueChange = localOnMobileChange.current
     Row(
-        modifier = Modifier.registerLoginItemModifier(phoneNumberState),
+        modifier = Modifier.registerLoginItemModifier(localPhoneNumberState.current),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Spacer(modifier = Modifier.width(10.dp))
@@ -185,33 +182,57 @@ fun MobileRegisterLogin(
         )
         Spacer(modifier = Modifier.width(10.dp))
         Text(
-            text = countryAreaCodeList[0],
+            text = localCountryAreaCodeList.current[0],
             fontSize = 14.sp,
             color = colorResource(id = com.res.R.color.res_color_090E15)
         )
         Spacer(modifier = Modifier.width(10.dp))
-        TextField(
-            value = phoneNumberOb,
-            onValueChange = onMobileChange,
+        BasicTextField(
+            value = localPhoneNumber.current.value,
+            onValueChange = { newValue -> onValueChange(newValue) },
             modifier = Modifier
                 .weight(1f)
-                .focusRequester(focusRequesterForPhoneNumber)
+//                .focusRequester(localFocusRequesterForPhoneNumber.current)
+                .fillMaxHeight()
+                .padding(0.dp)
+                .background(Color.Green)
                 .onFocusChanged { focusState ->
-                    onMobileFocusChanged(focusState)
+                    onFocusChanged(focusState)
                 },
             singleLine = true,
             keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
-            isError = when (phoneNumberState) {
-                RegisterLoginInputStatus.ERROR -> true
-                else -> false
-            },
-            colors = TextFieldDefaults.colors(
-                focusedContainerColor = Color.Transparent,
-                unfocusedContainerColor = Color.Transparent,
-                disabledContainerColor = Color.Transparent,
-                errorContainerColor = Color.Transparent,
-            )
+//            isError = when (localPhoneNumberState.current) {
+//                RegisterLoginInputStatus.ERROR -> true
+//                else -> false
+//            },
         )
+//        TextField(
+//            value = localPhoneNumber.current.value,
+//            onValueChange = {newValue ->onValueChange(newValue)},
+//            modifier = Modifier
+//                .weight(1f)
+////                .focusRequester(localFocusRequesterForPhoneNumber.current)
+//                .fillMaxHeight()
+//                .padding(0.dp)
+//                .background(Color.Green)
+//                .onFocusChanged { focusState ->
+//                    onFocusChanged(focusState)
+//                },
+//            singleLine = true,
+//            keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
+//            isError = when (localPhoneNumberState.current) {
+//                RegisterLoginInputStatus.ERROR -> true
+//                else -> false
+//            },
+//            textStyle = TextStyle(color = colorResource(id = com.res.R.color.res_color_090E15), fontSize = 14.sp),
+//            placeholder = { Text(text = LocalContext.current.getString(com.res.R.string.res_enter_phone_number), fontSize = 14.sp, color = colorResource(id = com.res.R.color.res_color_CED9E3))},
+//            colors = TextFieldDefaults.colors(
+//                focusedContainerColor = Color.Transparent,
+//                unfocusedContainerColor = Color.Transparent,
+//                disabledContainerColor = Color.Transparent,
+//                errorContainerColor = Color.Transparent,
+//            )
+//        )
     }
 }
 
@@ -228,7 +249,7 @@ fun SendVerifyCode(
     onSendCodeClick: () -> Unit,
     isSendButtonEnable: Boolean,
     sendCodeButtonStatus: SendCodeButtonStatus,
-    second:Int
+    second: Int
 ) {
     Row(
         modifier = Modifier.registerLoginItemModifier(sendVerifyCodeState),
@@ -285,7 +306,7 @@ fun SendVerifyCode(
             SendCodeButtonStatus.RESEND_WITH_SECONDS -> 118.dp
         }
 
-        val sendCodeButtonText = when(sendCodeButtonStatus){
+        val sendCodeButtonText = when (sendCodeButtonStatus) {
             SendCodeButtonStatus.SEND -> LocalContext.current.getText(com.res.R.string.res_send)
             SendCodeButtonStatus.RESEND -> LocalContext.current.getText(com.res.R.string.res_resend)
             SendCodeButtonStatus.RESEND_WITH_SECONDS -> "${LocalContext.current.getText(com.res.R.string.res_resend)}(${second}s)"
